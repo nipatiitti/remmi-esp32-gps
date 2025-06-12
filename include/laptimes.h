@@ -36,6 +36,9 @@ void initializeLapTiming();
 void setTargetLapTime(double target_seconds);
 double timeToSeconds(uint32_t time_value);
 
+// Manual lap trigger for debugging
+void triggerLapManually();
+
 // Separated functions for timing and location processing
 void updateLapTiming();  // Call every loop iteration to update times
 void processGPSLocation(

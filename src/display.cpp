@@ -43,15 +43,15 @@ void draw_data(float speed) {
             String diff_str;
             int diff_seconds = (int)(abs(target_lap.lap_time_diff) / 1000);
             if (target_lap.slower_than_target) {
-                diff_str = "-" + String(diff_seconds);
-            } else {
                 diff_str = "+" + String(diff_seconds);
+            } else {
+                diff_str = "-" + String(diff_seconds);
             }
 
             // Align the difference text to bottom right
             uint8_t text_width =
                 diff_str.length() *
-                9;  // Approximate character width for 16px font
+                10;  // Approximate character width for 16px font
             uint8_t start_x = d_width - text_width;
             u8g2.drawStr(start_x, d_height, diff_str.c_str());
         } else {
@@ -97,13 +97,25 @@ void update_loading_screen(bool gps_reading) {
 
         if (gps_reading) {
             // Waiting for location
-            u8g2.drawStr(d_width / 2 - (8 * 9), d_height, "Space 404");
+            u8g2.drawStr(d_width / 2, d_height, "Space 404");
         } else {
             // Waiting for GPS
-            u8g2.drawStr(d_width / 2 - (8 * 9), d_height, "GPS 404");
+            u8g2.drawStr(d_width / 2, d_height, "GPS 404");
         }
 
         draw_battery();
+    } while (u8g2.nextPage());
+}
+
+// Draw "WAIT" big in the middle and then "initializing gps" below it with
+// smaller font
+void init_screen() {
+    u8g2.firstPage();
+    do {
+        u8g2.setFont(u8g2_font_inr46_mn);
+        u8g2.drawStr(0, 46, "WAIT");
+        u8g2.setFont(u8g2_font_helvR14_tf);  // 16px font
+        u8g2.drawStr(d_width / 2 - 6 * 6, d_height / 2 + 30, "initializing...");
     } while (u8g2.nextPage());
 }
 

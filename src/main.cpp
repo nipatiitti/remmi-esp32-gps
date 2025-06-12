@@ -23,8 +23,12 @@ TinyGPSPlus gps;
 
 void setup(void) {
     begin_display();
+    init_screen();
+
     Serial.begin(115200);
+
     GPSSerial.begin(38400, SERIAL_8N1, GPS_RX_PIN, GPS_TX_PIN);
+
     pinMode(BATTERY_PIN, INPUT);  // ADC
 
     while (CAN_OK !=
@@ -73,6 +77,8 @@ void loop(void) {
 
     if (gps.location.isValid()) {
         draw_data(speed);
+    } else if (!first_update) {
+        loading_screen(gps_reading);
     }
 
     if (update) {
@@ -81,7 +87,5 @@ void loop(void) {
                     gps.speed.kmph(), gps.altitude.meters(), gps.course.deg(),
                     gps.hdop.hdop(), gps.satellites.value());
         update = false;
-    } else if (!first_update) {
-        loading_screen(gps_reading);
     }
 }
